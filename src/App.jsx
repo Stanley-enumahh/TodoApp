@@ -90,36 +90,47 @@ function Form({
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="w-full mt-[30px] h-fit flex justify-center"
-    >
-      <div className="w-[90%] flex justify-between">
-        <input
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          type="text"
-          className="border border-gray-600 px-3 outline-none rounded-lg py-1 bg-transparent w-[65%] md:w-[45%]"
-          placeholder="Add new todo..."
-        />
-        <button className="bg-[#89a1ef]  px-[30px] rounded-md shadow-lg">
-          Add
-        </button>
-        <select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-          className="bg-[#89a1ef] outline-none px-2 rounded-md"
-        >
-          <option value="input">sort by input</option>
-          <option value="description">sort by description</option>
-          <option value="completed">sort by completed</option>
-        </select>
-        <button
-          onClick={onClearList}
-          className="bg-[#eb4c4c]  px-[20px] rounded-md shadow-lg"
-        >
-          Clear list
-        </button>
+    <form onSubmit={handleSubmit} className="w-full h-fit flex justify-center">
+      <div className="w-full md:w-[90%] h-fit flex md:flex-row flex-col md:justify-center justify-between md:bg-transparent bg-blue-200 items-center py-6 gap-5">
+        <div className="flex flex-row md:justify-between w-full justify-center gap-8">
+          <input
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            type="text"
+            className="border border-gray-600 px-3 py-2 outline-none rounded-lg bg-transparent w-[58%] md:w-[80%]"
+            placeholder="Add new todo..."
+          />
+          <button className="bg-[#89a1ef] py-2 md:hidden flex  px-[30px] rounded-md shadow-lg">
+            Add
+          </button>
+        </div>
+        <div className="flex-row w-[90%] flex gap-5 md:justify-between justify-center">
+          <button className="bg-[#89a1ef] py-2 hidden md:flex px-[30px] rounded-md shadow-lg">
+            Add
+          </button>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className=" outline-none bg-[#89a1ef] py-2  px-2 rounded-md shadow-lg"
+          >
+            <option className="text-xs" value="input">
+              sort by input
+            </option>
+            <option className="text-xs" value="description">
+              sort by description
+            </option>
+            <option className="text-xs" value="completed">
+              sort by completed
+            </option>
+          </select>
+
+          <button
+            onClick={onClearList}
+            className="bg-[#eb4c4c] md:w-fit w-[50%] px-3 text-nowrap rounded-md shadow-lg"
+          >
+            Clear list
+          </button>
+        </div>
       </div>
     </form>
   );
@@ -175,7 +186,7 @@ function Stats({ todos }) {
   const numCompleted = todos.filter((todo) => todo.done).length;
   const Percentage = Math.round((numCompleted / numTodos) * 100);
   return (
-    <div className="w-full  bg-[#89a1ef] flex justify-center absolute bottom-0 items-center text-center py-4 md:py-2overflow-hidden text-wrap md:text-sm text-xs">
+    <div className="w-full  bg-[#89a1ef] flex justify-center absolute bottom-0 items-center text-center py-4 md:py-2 overflow-hidden text-wrap md:text-sm text-xs">
       {Percentage === 100 ? (
         <p> 😍You have completed your Todos!🎉</p>
       ) : (
