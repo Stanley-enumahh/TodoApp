@@ -5,6 +5,23 @@ import { useState } from "react";
 export default function App() {
   const [todos, setTodos] = useState([]);
 
+  const [sortBy, setSortBy] = useState("input");
+  let sortedItems;
+  if (sortBy === "input") sortedItems = todos;
+  if (sortBy === "description")
+    sortedItems = todos
+      .slice()
+      .sort((a, b) => a.description.localeCompare(b.description));
+  if (sortBy === "completed")
+    sortedItems = todos.slice().sort((a, b) => Number(a.done) - Number(b.done));
+
+  function handleClearList() {
+    const confirmed = window.confirm(
+      "Are you sure yo want to clear your todos?"
+    );
+    if (confirmed) setTodos([]);
+  }
+
   function handleAddTodo(todo) {
     setTodos((todos) => [...todos, todo]);
   }
@@ -25,11 +42,18 @@ export default function App() {
     <div className="w-full h-screen flex items-center justify-center bg-[#ebebeb]">
       <div className="w-full md:w-[60%] relative h-full md:h-[83%] shadow-md bg-white flex-col">
         <Header />
-        <Form onAddTodo={handleAddTodo} />
+        <Form
+          onAddTodo={handleAddTodo}
+          setSortBy={setSortBy}
+          sortBy={sortBy}
+          sortedItems={sortedItems}
+          onClearList={handleClearList}
+        />
         <Todos
           todos={todos}
           onDeleteTodo={handleDeleteTodo}
           onToggleCheck={handleTodoCheck}
+          sortedItems={sortedItems}
         />
         <Stats todos={todos} />
       </div>
@@ -46,8 +70,16 @@ function Header() {
   );
 }
 
-function Form({ onAddTodo }) {
+function Form({
+  onAddTodo,
+  onClearList,
+  todos,
+  sortBy,
+  sortedItems,
+  setSortBy,
+}) {
   const [description, setDescription] = useState("");
+
   function handleSubmit(e) {
     e.preventDefault();
     if (!description) return;
@@ -67,27 +99,43 @@ function Form({ onAddTodo }) {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           type="text"
-          className="border border-gray-600 px-3 outline-none rounded-lg py-1 bg-transparent w-[65%] md:w-[80%]"
+          className="border border-gray-600 px-3 outline-none rounded-lg py-1 bg-transparent w-[65%] md:w-[45%]"
           placeholder="Add new todo..."
         />
         <button className="bg-[#89a1ef]  px-[30px] rounded-md shadow-lg">
           Add
+        </button>
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="bg-[#89a1ef] outline-none px-2 rounded-md"
+        >
+          <option value="input">sort by input</option>
+          <option value="description">sort by description</option>
+          <option value="completed">sort by completed</option>
+        </select>
+        <button
+          onClick={onClearList}
+          className="bg-[#eb4c4c]  px-[20px] rounded-md shadow-lg"
+        >
+          Clear list
         </button>
       </div>
     </form>
   );
 }
 
-function Todos({ todos, onDeleteTodo, onToggleCheck }) {
+function Todos({ todos, onDeleteTodo, onToggleCheck, sortedItems }) {
   return (
     <div className="w-full h-[72%] md:h-[60%] overflow-y-scroll mt-[30px] justify-center items-center flex">
       <ul className="w-[90%] h-full flex gap-7 flex-col">
-        {todos.map((item) => (
+        {sortedItems.map((item) => (
           <Item
             item={item}
             key={item.id}
             onDeleteTodo={onDeleteTodo}
             onToggleCheck={onToggleCheck}
+            sortedItems={sortedItems}
           />
         ))}
       </ul>
